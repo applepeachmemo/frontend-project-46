@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+import { Command } from 'commander';
 
-const commander = require('commander');
 
-commander
+const program = new Command();
+
+program
   .name('gendiff')
-  .version('1.0.0')
   .description('Compares two configuration files and shows a difference.')
-  .option('-h, --help', 'output usage information');
+  .option('-v, --version', 'output the version number')
   
-commander.parse(process.argv);
+program.parse();
