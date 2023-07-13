@@ -9,9 +9,9 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-const file1OutputDefault = readFile('fileOutput_.txt');
-const file1OutputPlain = readFile('fileOutput_plain.txt');
-const file1OutputJson = readFile('fileOutput_json.txt');
+const file1OutputDefault = readFile('stylish.txt');
+const file1OutputPlain = readFile('plain.txt');
+const file1OutputJson = readFile('json.txt');
 const file1 = './__fixtures__/file1.json';
 const file2 = './__fixtures__/file2.json';
 const file3 = './__fixtures__/file1.yml';
