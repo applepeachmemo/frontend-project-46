@@ -9,18 +9,28 @@ const __dirname = dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
-const file1OutputDefault = readFile('stylish.txt');
-const file1OutputPlain = readFile('plain.txt');
-const file1OutputJson = readFile('json.txt');
-const file1 = './__fixtures__/file1.json';
-const file2 = './__fixtures__/file2.json';
-const file3 = './__fixtures__/file1.yml';
-const file4 = './__fixtures__/file2.yml';
+const getFilePair = (fileNum) => {
+  const filepath1 = getFixturePath(`file${fileNum}.json`);
+  const filepath2 = getFixturePath(`file${fileNum + 1}.json`);
+  return { filepath1, filepath2 };
+};
 
-describe('comparing  files', () => {
+describe('comparing files', () => {
   test('simple using', () => {
-    expect(gendiff(file1, file2)).toEqual(file1OutputDefault);
-    expect(gendiff(file3, file4, 'plain')).toEqual(file1OutputPlain);
-    expect(gendiff(file3, file4, 'json')).toEqual(file1OutputJson);
+    const { filepath1, filepath2 } = getFilePair(1);
+    const file1OutputDefault = readFile('stylish.txt');
+    expect(gendiff(filepath1, filepath2)).toEqual(file1OutputDefault);
+  });
+
+  test('plain format', () => {
+    const { filepath1, filepath2 } = getFilePair(1);
+    const file1OutputPlain = readFile('plain.txt');
+    expect(gendiff(filepath1, filepath2, 'plain')).toEqual(file1OutputPlain);
+  });
+
+  test('json format', () => {
+    const { filepath1, filepath2 } = getFilePair(1);
+    const file1OutputJson = readFile('json.txt');
+    expect(gendiff(filepath1, filepath2, 'json')).toEqual(file1OutputJson);
   });
 });
