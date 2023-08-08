@@ -1,11 +1,13 @@
 import { cwd } from 'node:process';
 import fs from 'fs';
-import { resolve } from 'node:path';
+import { resolve, extname } from 'node:path';
 import parsesFile from './parsers.js';
 import getTree from './getTree.js';
 import formatter from './formatters/index.js';
 
 const getFullFilePath = (filepath) => resolve(cwd(), filepath);
+
+const getFormat = (filepath) => extname(filepath).substring(1);
 
 const readFile = (filePath) => fs.readFileSync(filePath, 'utf-8');
 
@@ -16,9 +18,12 @@ const gendiff = (filepath1, filepath2, formatName = 'stylish') => {
   const data1 = readFile(pathFile1);
   const data2 = readFile(pathFile2);
 
+  const formatFile1 = getFormat(filepath1);
+  const formatFile2 = getFormat(filepath2);
+
   const tree = getTree(
-    parsesFile(data1),
-    parsesFile(data2),
+    parsesFile(data1, formatFile1),
+    parsesFile(data2, formatFile2),
   );
 
   return formatter(tree, formatName);
