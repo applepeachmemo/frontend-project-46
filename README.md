@@ -14,7 +14,7 @@
 
 ## Requirements
 
-Версия node.js v18.0.0
+Версия node.js v16.9.0
 
 ## Install
 
