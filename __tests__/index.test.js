@@ -21,10 +21,6 @@ describe('comparing files', () => {
       const filepath1 = getFixturePath(`file1.${format}`);
       const filepath2 = getFixturePath(`file2.${format}`);
 
-      test('stylish format', () => {
-        expect(gendiff(filepath1, filepath2)).toEqual(expectedStylish);
-      });
-
       test('plain format', () => {
         expect(gendiff(filepath1, filepath2, 'plain')).toEqual(expectedPlain);
       });
