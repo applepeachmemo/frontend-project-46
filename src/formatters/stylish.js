@@ -3,44 +3,52 @@ import _ from 'lodash';
 const spacesCount = 4;
 const replacer = ' ';
 
-const getSpaces = (depth, isFull) => {
+const getIndent = (depth, isFull) => {
   const indentSize = depth * spacesCount;
-  const spacesToUse = isFull ? indentSize : indentSize - 2;
-  return replacer.repeat(spacesToUse);
+  return replacer.repeat(isFull ? indentSize : indentSize - 2);
 };
 
 const stringify = (data, depth) => {
   if (!_.isPlainObject(data)) {
     return String(data);
   }
-
-  const lines = Object.entries(data).map(([key, value]) => {
-    const indent = getSpaces(depth + 1, false);
-    const keyValueString = `${key}: ${stringify(value, depth + 1)}`;
-    return `${indent}${keyValueString}`;
-  });
-
-  return `{\n${lines.join('\n')}\n${getSpaces(depth, true)}}`;
+  const lines = Object.entries(data).map(
+    ([key, value]) => `${getIndent(depth + 1, true)}${key}: ${stringify(value, depth + 1)}`,
+  );
+  return `{\n${lines.join('\n')}\n${getIndent(depth, true)}}`;
 };
 
 const iter = (diff, depth = 1) => diff.map((node) => {
-  const indent = getSpaces(depth, true);
-
   switch (node.type) {
     case 'deleted':
-      return `${indent}- ${node.key}: ${stringify(node.value, depth)}`;
+      return `${getIndent(depth, false)}- ${node.key}: ${stringify(
+        node.value,
+        depth,
+      )}`;
     case 'added':
-      return `${indent}+ ${node.key}: ${stringify(node.value, depth)}`;
+      return `${getIndent(depth, false)}+ ${node.key}: ${stringify(
+        node.value,
+        depth,
+      )}`;
     case 'changed': {
-      const value1String = stringify(node.value1, depth);
-      const value2String = stringify(node.value2, depth);
-      return `${indent}- ${node.key}: ${value1String}\n${indent}+ ${node.key}: ${value2String}`;
+      return `${getIndent(depth, false)}- ${node.key}: ${stringify(
+        node.value1,
+        depth,
+      )}\n${getIndent(depth, false)}+ ${node.key}: ${stringify(
+        node.value2,
+        depth,
+      )}`;
     }
     case 'unchanged':
-      return `${indent}${node.key}: ${stringify(node.value, depth)}`;
+      return `${getIndent(depth, true)}${node.key}: ${stringify(
+        node.value,
+        depth,
+      )}`;
     case 'nested': {
       const lines = iter(node.children, depth + 1);
-      return `${indent}${node.key}: {\n${lines.join('\n')}\n${indent}}`;
+      return `${getIndent(depth, true)}${node.key}: {\n${lines.join(
+        '\n',
+      )}\n${getIndent(depth, true)}}`;
     }
     default:
       throw new Error(`Unknown type of node '${node.type}'.`);
