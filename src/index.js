@@ -11,18 +11,19 @@ const getFormat = (filepath) => extname(filepath).substring(1);
 
 const readFile = (filePath) => fs.readFileSync(filePath, 'utf-8');
 
+const getFile = (filepath) => {
+  const fullFilePath = getFullFilePath(filepath);
+  const format = getFormat(filepath);
+  const data = readFile(fullFilePath);
+  return { format, data };
+};
+
 const gendiff = (filepath1, filepath2, formatName = 'stylish') => {
-  const pathFile1 = getFullFilePath(filepath1);
-  const pathFile2 = getFullFilePath(filepath2);
+  const file1 = getFile(filepath1);
+  const file2 = getFile(filepath2);
 
-  const dataFile1 = readFile(pathFile1);
-  const dataFile2 = readFile(pathFile2);
-
-  const formatFile1 = getFormat(filepath1);
-  const formatFile2 = getFormat(filepath2);
-
-  const parsedData1 = parsesFile(dataFile1, formatFile1);
-  const parsedData2 = parsesFile(dataFile2, formatFile2);
+  const parsedData1 = parsesFile(file1.data, file1.format);
+  const parsedData2 = parsesFile(file2.data, file2.format);
 
   const informationDiff = getTree(parsedData1, parsedData2);
 
