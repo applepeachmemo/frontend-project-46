@@ -10,22 +10,26 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 const readFile = (filename) => fs.readFileSync(getFixturePath(filename), 'utf-8');
 
 describe('comparing files', () => {
-  const filepath1 = getFixturePath('file1.json');
-  const filepath2 = getFixturePath('file2.json');
+  const filepath1Json = getFixturePath('file1.json');
+  const filepath2Json = getFixturePath('file2.json');
+  const filepath1Yaml = getFixturePath('file1.yaml');
+  const filepath2Yaml = getFixturePath('file2.yaml');
 
   const expectedStylish = readFile('stylish.txt');
   const expectedPlain = readFile('plain.txt');
   const expectedJson = readFile('json.txt');
 
-  test('default format (stylish)', () => {
-    expect(gendiff(filepath1, filepath2)).toEqual(expectedStylish);
-  });
-
-  test('plain format', () => {
-    expect(gendiff(filepath1, filepath2, 'plain')).toEqual(expectedPlain);
-  });
-
   test('json format', () => {
-    expect(gendiff(filepath1, filepath2, 'json')).toEqual(expectedJson);
+    expect(gendiff(filepath1Json, filepath2Json)).toEqual(expectedStylish);
+    expect(gendiff(filepath1Json, filepath2Json, 'stylish')).toEqual(expectedStylish);
+    expect(gendiff(filepath1Json, filepath2Json, 'plain')).toEqual(expectedPlain);
+    expect(gendiff(filepath1Json, filepath2Json, 'json')).toEqual(expectedJson);
+  });
+
+  test('yaml format', () => {
+    expect(gendiff(filepath1Yaml, filepath2Yaml)).toEqual(expectedStylish);
+    expect(gendiff(filepath1Yaml, filepath2Yaml, 'stylish')).toEqual(expectedStylish);
+    expect(gendiff(filepath1Yaml, filepath2Yaml, 'plain')).toEqual(expectedPlain);
+    expect(gendiff(filepath1Yaml, filepath2Yaml, 'json')).toEqual(expectedJson);
   });
 });
